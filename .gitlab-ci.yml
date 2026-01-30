@@ -25,9 +25,10 @@ Terraform Checks:
   script:
     - cd Terraform
     # backend=false Testing configuration without state management
-    - docker compose run --rm terraform -chdir=SetUp/ init backend=false
-    - docker compose run --rm terraform -chdir=Deply/ init backend=false
+    - docker compose run --rm terraform -chdir=SetUp/ init -backend=false
+    - docker compose run --rm terraform -chdir=Deply/ init -backend=false
     - docker compose run --rm terraform -chdir=Deply/ validate
-    - docker compose run --rm terraform -chdir=Deply/ fmt
+    - docker compose run --rm terraform -chdir=Deply/ fmt -check
     - docker compose run --rm terraform -chdir=SetUp/ validate
-    - docker compose run --rm terraform -chdir=SetUp/ fmt
+    # -check: Check mode - returns exit code instead of modifying files
+    - docker compose run --rm terraform -chdir=SetUp/ fmt -check
