@@ -32,3 +32,5 @@ Terraform Checks:
     - docker compose run --rm terraform -chdir=SetUp/ validate
     # -check: Check mode - returns exit code instead of modifying files
     - docker compose run --rm terraform -chdir=SetUp/ fmt -check
+  rules:
+    - if: "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(main|prod)$/ || $CI_COMMIT_BRANCH =~ /^(main|prod)$/"
