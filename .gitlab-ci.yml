@@ -28,6 +28,8 @@ Terraform Checks:
     - docker compose run --rm terraform -chdir=SetUp/ init -backend=false
     - docker compose run --rm terraform -chdir=Deploy/ init -backend=false
     - docker compose run --rm terraform -chdir=Deploy/ validate
+    - docker compose run --rm terraform -chdir=Deploy/ fmt
+    - docker compose run --rm terraform -chdir=SetUp/ fmt
     - docker compose run --rm terraform -chdir=Deploy/ fmt -check
     - docker compose run --rm terraform -chdir=SetUp/ validate
     # -check: Check mode - returns exit code instead of modifying files
