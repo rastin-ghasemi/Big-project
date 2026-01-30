@@ -8,6 +8,7 @@ before_script:
 
 stages:
   - Test and Lint
+  - man
 
 Python_Checker:
   stage: Test and Lint
@@ -15,6 +16,7 @@ Python_Checker:
     - docker compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
     - docker compose run -rm app sh -c "flake8"
 
-test:
+hi:
+  stage: man
   script:
     - echo "hi"
