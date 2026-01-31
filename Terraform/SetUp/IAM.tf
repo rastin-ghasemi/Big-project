@@ -24,6 +24,7 @@ data "aws_iam_policy_document" "tf_backend" {
     effect  = "Allow"
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
+      "arn:aws:s3:::${var.tf_state_bucket}/tf_state_deploy/staging/*",
       "arn:aws:s3:::${var.tf_state_bucket}/Big-Pro-SetUP/*",
       "arn:aws:s3:::${var.tf_state_bucket}/state-Big-Pro-SetUP-Deploy/*"
     ]
@@ -34,9 +35,22 @@ data "aws_iam_policy_document" "tf_backend" {
       "dynamodb:DescribeTable",
       "dynamodb:GetItem",
       "dynamodb:PutItem",
+      "dynamodb:PutObject",
       "dynamodb:DeleteItem"
     ]
     resources = ["arn:aws:dynamodb:*:*:table/${var.terraform-state-locking}"]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "ec2:DescribeAvailabilityZones",
+      "ec2:DescribeRegions",
+      "ec2:DescribeVpcs",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeInstances"
+    ]
+    resources = ["*"]
   }
 }
 
