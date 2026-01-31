@@ -64,7 +64,7 @@ Deploy:
     - export TF_VAR_ECR_APP_image="ECR_REPO_APP:CI_COMMIT_SHA"
     - export TF_VAR_ECR_PROXY_image="ECR_REPO_proxy:CI_COMMIT_SHA"
     - cd Terraform
-    - docker compose run -rm terraform -chdir=Deploy/ init
+    - docker compose run --rm terraform -chdir=Deploy/ init
     - docker compose run --rm terraform -chdir=Deploy workspace select -or-create $workspace
     - docker compose run --rm terraform -chdir=Deploy apply -auto-approve
   rules:
