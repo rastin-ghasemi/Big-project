@@ -7,11 +7,9 @@ output "cd_user_access_secret" {
   value       = aws_iam_access_key.cd.secret
   sensitive   = true
 }
-#output "Plolicy_doc_json" {
 #  description = "Json Document Policy for our CD User"
 #  value       = data.aws_iam_policy_document.tf_backend.json
 
-#}
 output "ECR" {
   description = "ECR url "
   value       = aws_ecr_repository.ECR.repository_url
