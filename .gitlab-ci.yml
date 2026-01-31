@@ -9,7 +9,7 @@ before_script:
 stages:
   - Test and Lint
   - Build and Push
-
+  - Deploy
 Python_Checker:
   stage: Test and Lint
   script:
@@ -49,5 +49,23 @@ push to ECR:
     - docker push $ECR_REPO_APP:CI_COMMIT_SHA
     - docker build --compress -t $ECR_REPO_PROXY:CI_COMMIT_SHA proxy/
     - docker push $ECR_REPO_PROXY:CI_COMMIT_SHA
+  rules:
+    - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
+
+Deploy:
+  stage: Deploy
+  script:
+    - | # Multi line script
+      if [[ $CI_COMMIT_BRANCH == 'prod' ]]; then
+        workspace="prod"
+      else
+        workspace="staging"
+      fi
+    - export TF_VAR_ECR_APP_image="ECR_REPO_APP:CI_COMMIT_SHA"
+    - export TF_VAR_ECR_PROXY_image="ECR_REPO_proxy:CI_COMMIT_SHA"
+    - cd Terraform
+    - docker compose run -rm terraform -chdir=Deploy/ init
+    - docker compose run --rm terraform -chdir=Deploy workspace select -or-create $workspace
+    - docker compose run --rm terraform -chdir=Deploy apply -auto-approve
   rules:
     - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
