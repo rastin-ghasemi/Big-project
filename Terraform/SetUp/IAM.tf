@@ -10,6 +10,7 @@ resource "aws_iam_user" "cd" {
 resource "aws_iam_access_key" "cd" {
   user = aws_iam_user.cd.name
 }
+#####################################################################################################################################################
 ###################################################################
 #Define policy for Terraform backend to S3 and DynamoDB access #
 ###################################################################
@@ -41,8 +42,8 @@ data "aws_iam_policy_document" "tf_backend" {
     resources = ["arn:aws:dynamodb:*:*:table/${var.terraform-state-locking}"]
   }
   statement {
-    effect    = "Allow"
-    actions   = [
+    effect = "Allow"
+    actions = [
       "ec2:DescribeAvailabilityZones",
       "ec2:DescribeRegions",
       "ec2:DescribeVpcs",
@@ -71,7 +72,7 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
   policy_arn = aws_iam_policy.tf_backend.arn
 }
 
-
+########################################################################################################################################
 ########################
 # Policy for ECR access #
 ########################
@@ -115,4 +116,74 @@ resource "aws_iam_policy" "ecr" {
 resource "aws_iam_user_policy_attachment" "ecr" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.ecr.arn
+}
+
+
+##################################################################################################################################
+
+##########################
+# Policy for EC2 access #
+##########################
+
+data "aws_iam_policy_document" "ec2" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:DescribeVpcs",
+      "ec2:CreateTags",
+      "ec2:CreateVpc",
+      "ec2:DeleteVpc",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DeleteSubnet",
+      "ec2:DeleteSecurityGroup",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DetachInternetGateway",
+      "ec2:DescribeInternetGateways",
+      "ec2:DeleteInternetGateway",
+      "ec2:DetachNetworkInterface",
+      "ec2:DescribeVpcEndpoints",
+      "ec2:DescribeRouteTables",
+      "ec2:DeleteRouteTable",
+      "ec2:DeleteVpcEndpoints",
+      "ec2:DisassociateRouteTable",
+      "ec2:DeleteRoute",
+      "ec2:DescribePrefixLists",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeVpcAttribute",
+      "ec2:DescribeNetworkAcls",
+      "ec2:AssociateRouteTable",
+      "ec2:AuthorizeSecurityGroupIngress",
+      "ec2:RevokeSecurityGroupEgress",
+      "ec2:CreateSecurityGroup",
+      "ec2:AuthorizeSecurityGroupEgress",
+      "ec2:CreateVpcEndpoint",
+      "ec2:ModifySubnetAttribute",
+      "ec2:CreateSubnet",
+      "ec2:CreateRoute",
+      "ec2:CreateRouteTable",
+      "ec2:CreateInternetGateway",
+      "ec2:AttachInternetGateway",
+      "ec2:ModifyVpcAttribute",
+      "ec2:RevokeSecurityGroupIngress",
+    ]
+    resources = ["*"]
+  }
+}
+
+##################
+# Create Plolicy #
+##################
+resource "aws_iam_policy" "ec2" {
+  name        = "${aws_iam_user.cd.name}-ec2"
+  description = "allow user to use ec2 resources "
+  policy      = data.aws_iam_policy_document.ec2.json
+}
+
+#####################
+# Attach the policy #
+#####################
+
+resource "aws_iam_user_policy_attachment" "ec2" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.ec2.arn
 }
