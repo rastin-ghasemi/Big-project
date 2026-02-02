@@ -120,13 +120,13 @@ resource "aws_vpc_endpoint" "cloudWatch_logs" {
 }
 resource "aws_vpc_endpoint" "ssm" {
   vpc_id              = aws_vpc.main.id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.ssmmassages"
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ssmmessages"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   subnet_ids          = [aws_subnet.Private-a.id]
   security_group_ids  = [aws_security_group.endpoint_access.id]
   tags = {
-    Name = "${local.Prefix}-ssmmasseges-endpoint"
+    Name = "${local.Prefix}-ssmmesseges-endpoint"
   }
 
 
