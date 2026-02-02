@@ -29,7 +29,7 @@ resource "aws_subnet" "public_subnets-a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.1.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "${data.aws_region.current.name}-a"
+  availability_zone       = "${data.aws_region.current.name}a"
   tags = {
     Name = "${local.Prefix}-Public-a"
   }
@@ -62,7 +62,7 @@ resource "aws_subnet" "Private-a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.1.10.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "${data.aws_region.current.name}-a"
+  availability_zone       = "${data.aws_region.current.name}a"
   tags = {
     Name = "${local.Prefix}-Private-a"
   }
