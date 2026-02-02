@@ -74,7 +74,7 @@ resource "aws_subnet" "Private-a" {
 resource "aws_security_group" "endpoint_access" {
   name        = "${local.Prefix}-endpoint-access"
   vpc_id      = aws_vpc.main.id
-  description = "Access to Endpoint"
+  description = "Access to Endpoint."
   ingress {
     cidr_blocks = [aws_vpc.main.cidr_block]
     from_port   = 443
