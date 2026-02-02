@@ -53,7 +53,7 @@ push to ECR:
   rules:
     - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
 
-Deploy:
+Terraform Apply:
   stage: Deploy
   script:
     - | # Multi line script
