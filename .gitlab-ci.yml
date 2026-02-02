@@ -46,10 +46,10 @@ push to ECR:
     - apk update && apk add aws-cli
     # login to ECR AND ECR PROXY .
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
-    - docker build --compress -t $ECR_REPO_APP:CI_COMMIT_SHA .
-    - docker push $ECR_REPO_APP:CI_COMMIT_SHA
-    - docker build --compress -t $ECR_REPO_PROXY:CI_COMMIT_SHA proxy/
-    - docker push $ECR_REPO_PROXY:CI_COMMIT_SHA
+    - docker build --compress -t $ECR_REPO_APP:$CI_COMMIT_SHA .
+    - docker push $ECR_REPO_APP:$CI_COMMIT_SHA
+    - docker build --compress -t $ECR_REPO_PROXY:$CI_COMMIT_SHA proxy/
+    - docker push $ECR_REPO_PROXY:$CI_COMMIT_SHA
   rules:
     - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
 
@@ -62,13 +62,14 @@ Deploy:
       else
         workspace="staging"
       fi
-    - export TF_VAR_ECR_APP_image="ECR_REPO_APP:CI_COMMIT_SHA"
-    - export TF_VAR_ECR_PROXY_image="ECR_REPO_proxy:CI_COMMIT_SHA"
+    - export TF_VAR_ECR_APP_image="$ECR_REPO_APP:$CI_COMMIT_SHA"
+    - export TF_VAR_ECR_PROXY_image="$ECR_REPO_PROXY:$CI_COMMIT_SHA"
     - cd Terraform
     - docker compose run --rm terraform -chdir=Deploy/ init
     - docker compose run --rm terraform -chdir=Deploy workspace select -or-create $workspace
     - docker compose run --rm terraform -chdir=Deploy apply -auto-approve
   rules:
+  # Run this job if the current branch name is exactly 'main' OR exactly 'prod'
     - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
 
 
@@ -82,9 +83,9 @@ Destroy:
       else
         workspace="staging"
       fi
-    - docker compose run --rm terraform -chdir=deploy/ init
-    - docker compose run --rm terraform -chdir=deploy/ workspace select $workspace
-    - docker compose run --rm terraform -chdir=deploy/ destroy --auto-approve
+    - docker compose run --rm terraform -chdir=Deploy/ init
+    - docker compose run --rm terraform -chdir=Deploy/ workspace select $workspace
+    - docker compose run --rm terraform -chdir=Deploy/ destroy --auto-approve
   rules:
     - if: "$CI_COMMIT_BRANCH =~ /^(main|prod)$/"
       when: manual
