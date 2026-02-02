@@ -75,6 +75,7 @@ Deploy:
 Destroy:
   stage: Destroy
   script:
+    - cd Terraform
     - |
       if [[ $CI_COMMIT_BRANCH == 'prod' ]]; then
         workspace='prod'
