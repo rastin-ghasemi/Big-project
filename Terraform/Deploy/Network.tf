@@ -126,7 +126,7 @@ resource "aws_vpc_endpoint" "ssm" {
   subnet_ids          = [aws_subnet.Private-a.id]
   security_group_ids  = [aws_security_group.endpoint_access.id]
   tags = {
-    Name = "${local.Prefix}-ssmmassages-endpoint"
+    Name = "${local.Prefix}-ssmmasseges-endpoint"
   }
 
 
