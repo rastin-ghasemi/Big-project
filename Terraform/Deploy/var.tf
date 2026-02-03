@@ -26,3 +26,13 @@ variable "vpc_cidr" {
     error_message = "Must be a valid CIDR block."
   }
 }
+
+variable "db_username" {
+  description = "User for RDS DB."
+  default = "recipeapp"
+  
+}
+variable "db_password" {
+  description = "Password for RDS DB"
+
+}
