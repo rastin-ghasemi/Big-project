@@ -2,7 +2,7 @@
 # RDS #
 #######
 resource "aws_db_subnet_group" "main" {
-  name = "${local.Prefix}-main"
+  name = "main"
   subnet_ids = [
     aws_subnet.Private-a.id
   ]
