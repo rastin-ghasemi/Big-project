@@ -43,7 +43,7 @@ resource "aws_iam_role_policy_attachment" "task_ssm_policy" {
 ###############################
 # Create CloudWatch Log Group #
 ###############################
-resource "aws_cloudwatch_log_group" "ECS" {
+resource "aws_cloudwatch_log_group" "ecs" {
     name = "${local.Prefix}-api"
   
 }
