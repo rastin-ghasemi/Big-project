@@ -323,6 +323,7 @@ data "aws_iam_policy_document" "logs" {
       "logs:TagResource",
       "logs:ListTagsLogGroup",
       "logs:ListTagsForResource",
+      "logs:ListTagsLogGroup",
       "logs:PutRetentionPolicy",
       "logs:DescribeLogStreams",
       "logs:CreateLogStream",
