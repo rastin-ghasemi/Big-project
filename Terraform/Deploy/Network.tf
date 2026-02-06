@@ -71,7 +71,7 @@ resource "aws_subnet" "Private-b" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.50.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "${data.aws_region.current.name}a"
+  availability_zone       = "${data.aws_region.current.name}b"
   tags = {
     Name = "${local.Prefix}-Private-b"
   }
