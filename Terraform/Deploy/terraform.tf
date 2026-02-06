@@ -5,7 +5,7 @@ terraform {
     key                  = "state-Big-Pro-SetUP-Deploy"
     workspace_key_prefix = "tf_state_deploy"
     region               = "us-east-1"
-    dynamodb_table       = "${var.terraform-state-locking}"
+    dynamodb_table       = var.terraform-state-locking
     encrypt              = true
   }
 
