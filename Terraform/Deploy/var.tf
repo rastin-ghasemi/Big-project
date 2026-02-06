@@ -1,6 +1,6 @@
 variable "Prefix" {
   description = "The name of project"
-  default     = "Deploy-Project"
+  default     = "deploy-project"
 }
 variable "Project" {
   description = "The name of project"
