@@ -4,7 +4,8 @@
 resource "aws_db_subnet_group" "main" {
   name = "main"
   subnet_ids = [
-    aws_subnet.Private-a.id
+    aws_subnet.Private-a.id,
+    aws_subnet.Private-b.id
   ]
 
   tags = {

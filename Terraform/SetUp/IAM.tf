@@ -250,6 +250,9 @@ data "aws_iam_policy_document" "ecs" {
       "ecs:DeleteService",
       "ecs:DescribeTaskDefinition",
       "ecs:CreateService",
+       "ecs:TagResource",
+      "ecs:UntagResource",
+      "ecs:ListTagsForResource",
       "ecs:RegisterTaskDefinition",
       "ecs:CreateCluster",
       "ecs:UpdateCluster",
@@ -317,17 +320,28 @@ data "aws_iam_policy_document" "logs" {
   statement {
     effect = "Allow"
     actions = [
+      # Log group management
+      "logs:CreateLogGroup",
       "logs:DeleteLogGroup",
       "logs:DescribeLogGroups",
-      "logs:CreateLogGroup",
+      
+      # Tag management
       "logs:TagResource",
-      "logs:ListTagsLogGroup",
+      "logs:UntagResource",
       "logs:ListTagsForResource",
       "logs:ListTagsLogGroup",
+      
+      # Log retention
       "logs:PutRetentionPolicy",
+      "logs:DeleteRetentionPolicy",
+      
+      # Log stream operations
       "logs:DescribeLogStreams",
       "logs:CreateLogStream",
-      "logs:PutLogEvents"
+      "logs:DeleteLogStream",
+      "logs:PutLogEvents",
+      "logs:GetLogEvents",
+      "logs:FilterLogEvents"
     ]
     resources = ["*"]
   }
