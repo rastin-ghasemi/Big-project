@@ -202,8 +202,15 @@ data "aws_iam_policy_document" "rds" {
       "rds:DeleteDBSubnetGroup",
       "rds:CreateDBInstance",
       "rds:DeleteDBInstance",
+      "rds:AddTagsToResource",
       "rds:ListTagsForResource",
-      "rds:ModifyDBInstance"
+      "rds:ModifyDBInstance",
+      "rds:RemoveTagsFromResource",
+      "rds:DescribeEvents",
+      "rds:DescribeOrderableDBInstanceOptions",
+      "rds:DescribeDBEngineVersions",
+      "rds:DescribeDBParameterGroups",
+      "rds:DescribeDBParameters"
     ]
     resources = ["*"]
   }
@@ -314,7 +321,12 @@ data "aws_iam_policy_document" "logs" {
       "logs:DescribeLogGroups",
       "logs:CreateLogGroup",
       "logs:TagResource",
-      "logs:ListTagsLogGroup"
+      "logs:ListTagsLogGroup",
+      "logs:ListTagsForResource",
+      "logs:PutRetentionPolicy",
+      "logs:DescribeLogStreams",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
     ]
     resources = ["*"]
   }
