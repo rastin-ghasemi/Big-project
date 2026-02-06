@@ -178,7 +178,7 @@ resource "aws_security_group" "ecs_service" {
     to_port   = 5432
     protocol  = "tcp"
     cidr_blocks = [
-      aws_subnet.private-a.cidr_block
+      aws_subnet.Private-a.cidr_block
     ]
   }
 
@@ -205,7 +205,7 @@ resource "aws_ecs_service" "api" {
 
   network_configuration {
     subnets = [
-      aws_subnet.public-a.id
+      aws_subnet.Private-a.id
     ]
 
     security_groups = [aws_security_group.ecs_service.id]
