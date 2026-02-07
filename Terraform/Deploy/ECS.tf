@@ -22,7 +22,7 @@ resource "aws_iam_role_policy_attachment" "task_execution_role" {
 
 ###################
 # SSM Task Access #
-###################
+###################git 
 
 resource "aws_iam_role" "app_task" {
   name               = "${local.Prefix}-app-task"
@@ -178,6 +178,7 @@ resource "aws_security_group" "ecs_service" {
     to_port   = 5432
     protocol  = "tcp"
     cidr_blocks = [
+      aws_subnet.Private-a.cidr_block,
       aws_subnet.Private-a.cidr_block
     ]
   }
@@ -187,6 +188,7 @@ resource "aws_security_group" "ecs_service" {
     from_port = 8000
     to_port   = 8000
     protocol  = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -204,8 +206,11 @@ resource "aws_ecs_service" "api" {
   enable_execute_command = true
 
   network_configuration {
+    ### This Will remove after we config ALB
+    assign_public_ip = true
     subnets = [
-      aws_subnet.Private-a.id
+      aws_subnet.Private-a.id,
+      aws_subnet.Private-b.id
     ]
 
     security_groups = [aws_security_group.ecs_service.id]
