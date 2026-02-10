@@ -364,35 +364,61 @@ resource "aws_iam_user_policy_attachment" "logs" {
 
 
 
-#########################
-# Policy for ELB access #
-#########################
 
 data "aws_iam_policy_document" "elb" {
   statement {
     effect = "Allow"
     actions = [
+      # Create/Delete Operations
+      "elasticloadbalancing:CreateLoadBalancer",
+      "elasticloadbalancing:CreateTargetGroup",
+      "elasticloadbalancing:CreateListener",
       "elasticloadbalancing:DeleteLoadBalancer",
       "elasticloadbalancing:DeleteTargetGroup",
       "elasticloadbalancing:DeleteListener",
-      "elasticloadbalancing:DescribeListeners",
-      "elasticloadbalancing:DescribeLoadBalancerAttributes",
-      "elasticloadbalancing:DescribeTargetGroups",
-      "elasticloadbalancing:DescribeTargetGroupAttributes",
-      "elasticloadbalancing:DescribeLoadBalancers",
-      "elasticloadbalancing:CreateListener",
-      "elasticloadbalancing:SetSecurityGroups",
+      
+      # Describe/Read Operations
+      "elasticloadbalancing:Describe*",  # This covers ALL Describe actions
+      
+      # Modify Operations
       "elasticloadbalancing:ModifyLoadBalancerAttributes",
-      "elasticloadbalancing:CreateLoadBalancer",
+      "elasticloadbalancing:ModifyTargetGroup",
       "elasticloadbalancing:ModifyTargetGroupAttributes",
-      "elasticloadbalancing:CreateTargetGroup",
+      "elasticloadbalancing:ModifyListener",
+      
+      # Listener Operations
+      "elasticloadbalancing:SetListenerCertificates",
+      "elasticloadbalancing:AddListenerCertificates",
+      "elasticloadbalancing:RemoveListenerCertificates",
+      
+      # Security Group Operations
+      "elasticloadbalancing:SetSecurityGroups",
+      "elasticloadbalancing:ApplySecurityGroupsToLoadBalancer",
+      
+      # Subnet Operations
+      "elasticloadbalancing:SetSubnets",
+      
+      # IP Address Type
+      "elasticloadbalancing:SetIpAddressType",
+      
+      # Tag Operations
       "elasticloadbalancing:AddTags",
-      "elasticloadbalancing:DescribeTags"
+      "elasticloadbalancing:RemoveTags",
+      
+      # Rule Operations (for Listener Rules)
+      "elasticloadbalancing:CreateRule",
+      "elasticloadbalancing:DeleteRule",
+      "elasticloadbalancing:ModifyRule",
+      "elasticloadbalancing:DescribeRules",
+      
+      # Target Operations
+      "elasticloadbalancing:RegisterTargets",
+      "elasticloadbalancing:DeregisterTargets",
+      "elasticloadbalancing:DescribeTargetHealth"
     ]
     resources = ["*"]
   }
-}
-
+} 
 resource "aws_iam_policy" "elb" {
   name        = "${aws_iam_user.cd.name}-elb"
   description = "Allow user to manage ELB resources."
