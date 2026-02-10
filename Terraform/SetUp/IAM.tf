@@ -376,41 +376,41 @@ data "aws_iam_policy_document" "elb" {
       "elasticloadbalancing:DeleteLoadBalancer",
       "elasticloadbalancing:DeleteTargetGroup",
       "elasticloadbalancing:DeleteListener",
-      
+
       # Describe/Read Operations
-      "elasticloadbalancing:Describe*",  # This covers ALL Describe actions
-      
+      "elasticloadbalancing:Describe*", # This covers ALL Describe actions
+
       # Modify Operations
       "elasticloadbalancing:ModifyLoadBalancerAttributes",
       "elasticloadbalancing:ModifyTargetGroup",
       "elasticloadbalancing:ModifyTargetGroupAttributes",
       "elasticloadbalancing:ModifyListener",
-      
+
       # Listener Operations
       "elasticloadbalancing:SetListenerCertificates",
       "elasticloadbalancing:AddListenerCertificates",
       "elasticloadbalancing:RemoveListenerCertificates",
-      
+
       # Security Group Operations
       "elasticloadbalancing:SetSecurityGroups",
       "elasticloadbalancing:ApplySecurityGroupsToLoadBalancer",
-      
+
       # Subnet Operations
       "elasticloadbalancing:SetSubnets",
-      
+
       # IP Address Type
       "elasticloadbalancing:SetIpAddressType",
-      
+
       # Tag Operations
       "elasticloadbalancing:AddTags",
       "elasticloadbalancing:RemoveTags",
-      
+
       # Rule Operations (for Listener Rules)
       "elasticloadbalancing:CreateRule",
       "elasticloadbalancing:DeleteRule",
       "elasticloadbalancing:ModifyRule",
       "elasticloadbalancing:DescribeRules",
-      
+
       # Target Operations
       "elasticloadbalancing:RegisterTargets",
       "elasticloadbalancing:DeregisterTargets",
@@ -418,7 +418,7 @@ data "aws_iam_policy_document" "elb" {
     ]
     resources = ["*"]
   }
-} 
+}
 resource "aws_iam_policy" "elb" {
   name        = "${aws_iam_user.cd.name}-elb"
   description = "Allow user to manage ELB resources."
@@ -428,4 +428,42 @@ resource "aws_iam_policy" "elb" {
 resource "aws_iam_user_policy_attachment" "elb" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.elb.arn
+}
+
+
+
+#########################
+# Policy for EFS access #
+#########################
+
+data "aws_iam_policy_document" "efs" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "elasticfilesystem:DescribeFileSystems",
+      "elasticfilesystem:DescribeAccessPoints",
+      "elasticfilesystem:DeleteFileSystem",
+      "elasticfilesystem:DeleteAccessPoint",
+      "elasticfilesystem:DescribeMountTargets",
+      "elasticfilesystem:DeleteMountTarget",
+      "elasticfilesystem:DescribeMountTargetSecurityGroups",
+      "elasticfilesystem:DescribeLifecycleConfiguration",
+      "elasticfilesystem:CreateMountTarget",
+      "elasticfilesystem:CreateAccessPoint",
+      "elasticfilesystem:CreateFileSystem",
+      "elasticfilesystem:TagResource",
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "efs" {
+  name        = "${aws_iam_user.cd.name}-efs"
+  description = "Allow user to manage EFS resources."
+  policy      = data.aws_iam_policy_document.efs.json
+}
+
+resource "aws_iam_user_policy_attachment" "efs" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.efs.arn
 }

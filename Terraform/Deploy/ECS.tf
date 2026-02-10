@@ -100,6 +100,10 @@ resource "aws_ecs_task_definition" "api" {
           readOnly      = false
           containerPath = "/vol/web/static"
           sourceVolume  = "static"
+        },{
+        readOnly=false
+        containerPath="/vol/web/media"
+        sourceVolume="Efs-media"
         }
       ],
       logConfiguration = {
@@ -134,6 +138,11 @@ resource "aws_ecs_task_definition" "api" {
           readOnly      = true
           containerPath = "/vol/static"
           sourceVolume  = "static"
+        },
+        {
+        readOnly=true
+        containerPath="/vol/media"
+        sourceVolume="Efs-media"
         }
       ],
       logConfiguration = {
@@ -152,7 +161,17 @@ resource "aws_ecs_task_definition" "api" {
   volume {
     name = "static"
   }
-
+  volume {
+    name = "Efs-media"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.media.id
+      transit_encryption = "ENABLED"
+    authorization_config {
+      access_point_id = aws_efs_access_point.media.id
+      iam = "DISABLED"
+    }
+    }
+  }
   runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
@@ -171,7 +190,16 @@ resource "aws_security_group" "ecs_service" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+  # NFS Port for EFS volumes
+  egress {
+    from_port = 2049
+    to_port = 2049
+    protocol = "tcp"
+    cidr_blocks = [
+      aws_subnet.Private-a.cidr_block,
+      aws_subnet.Private-b.cidr_block,
+    ]
+  }
   # RDS connectivity
   egress {
     from_port = 5432
@@ -185,9 +213,9 @@ resource "aws_security_group" "ecs_service" {
 
   # HTTP inbound access
   ingress {
-    from_port = 8000
-    to_port   = 8000
-    protocol  = "tcp"
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -209,17 +237,17 @@ resource "aws_ecs_service" "api" {
     ### This Will remove after we config ALB
     assign_public_ip = false
     subnets = [
-      
+
       aws_subnet.Private-a.id,
       aws_subnet.Private-b.id
     ]
-    
+
 
     security_groups = [aws_security_group.ecs_service.id]
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.api.arn
-    container_name = "proxy"
-    container_port = 8000
+    container_name   = "proxy"
+    container_port   = 8000
   }
 }
