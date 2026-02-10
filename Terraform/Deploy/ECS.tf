@@ -100,10 +100,10 @@ resource "aws_ecs_task_definition" "api" {
           readOnly      = false
           containerPath = "/vol/web/static"
           sourceVolume  = "static"
-        },{
-        readOnly=false
-        containerPath="/vol/web/media"
-        sourceVolume="Efs-media"
+          }, {
+          readOnly      = false
+          containerPath = "/vol/web/media"
+          sourceVolume  = "Efs-media"
         }
       ],
       logConfiguration = {
@@ -140,9 +140,9 @@ resource "aws_ecs_task_definition" "api" {
           sourceVolume  = "static"
         },
         {
-        readOnly=true
-        containerPath="/vol/media"
-        sourceVolume="Efs-media"
+          readOnly      = true
+          containerPath = "/vol/media"
+          sourceVolume  = "Efs-media"
         }
       ],
       logConfiguration = {
@@ -164,12 +164,12 @@ resource "aws_ecs_task_definition" "api" {
   volume {
     name = "Efs-media"
     efs_volume_configuration {
-      file_system_id = aws_efs_file_system.media.id
+      file_system_id     = aws_efs_file_system.media.id
       transit_encryption = "ENABLED"
-    authorization_config {
-      access_point_id = aws_efs_access_point.media.id
-      iam = "DISABLED"
-    }
+      authorization_config {
+        access_point_id = aws_efs_access_point.media.id
+        iam             = "DISABLED"
+      }
     }
   }
   runtime_platform {
@@ -193,8 +193,8 @@ resource "aws_security_group" "ecs_service" {
   # NFS Port for EFS volumes
   egress {
     from_port = 2049
-    to_port = 2049
-    protocol = "tcp"
+    to_port   = 2049
+    protocol  = "tcp"
     cidr_blocks = [
       aws_subnet.Private-a.cidr_block,
       aws_subnet.Private-b.cidr_block,
