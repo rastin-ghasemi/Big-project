@@ -39,7 +39,7 @@ resource "aws_security_group" "alb" {
 resource "aws_lb" "api" {
     name="${local.Prefix}-lb"
     load_balancer_type = "application"
-    subnets =[aws_subnet.public_subnets-a.id]
+    subnets =[aws_subnet.public_subnets-a.id,aws_subnet.Private-b.id]
     security_groups = [aws_security_group.alb.id]
 }
 

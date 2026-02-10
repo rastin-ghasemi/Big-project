@@ -35,6 +35,19 @@ resource "aws_subnet" "public_subnets-a" {
   }
 }
 
+
+###########################################
+# Public Subnet for LB Public Access #
+###########################################
+resource "aws_subnet" "public_subnets-b" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.4.0/24"
+  map_public_ip_on_launch = true
+  availability_zone       = "${data.aws_region.current.name}b"
+  tags = {
+    Name = "${local.Prefix}-Public-b"
+  }
+}
 ########################################
 # Create Route Tables and Associations #
 ########################################
@@ -45,7 +58,7 @@ resource "aws_route_table" "public_route_table" {
     gateway_id = aws_internet_gateway.main.id
   }
   tags = {
-    Name      = "${local.Prefix}-Public-a"
+    Name      = "${local.Prefix}-Public"
     Terraform = "true"
   }
 }
@@ -54,14 +67,17 @@ resource "aws_route_table_association" "public-a" {
   route_table_id = aws_route_table.public_route_table.id
 }
 
-
+resource "aws_route_table_association" "public-b" {
+  subnet_id      = aws_subnet.public_subnets-b.id
+  route_table_id = aws_route_table.public_route_table.id
+}
 ###########################################
 # Private Subnet for Internet Access #
 ###########################################
 resource "aws_subnet" "Private-a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.10.0/24"
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
   availability_zone       = "${data.aws_region.current.name}a"
   tags = {
     Name = "${local.Prefix}-Private-a"
@@ -70,7 +86,7 @@ resource "aws_subnet" "Private-a" {
 resource "aws_subnet" "Private-b" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.50.0/24"
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
   availability_zone       = "${data.aws_region.current.name}b"
   tags = {
     Name = "${local.Prefix}-Private-b"
