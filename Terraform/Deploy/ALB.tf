@@ -52,14 +52,7 @@ resource "aws_lb_target_group" "api" {
   
   # Health check configuration
   health_check {
-    path                = "/api/health-check"
-    protocol            = "HTTP"
-    port                = "traffic-port"  # Use the same port as the target (8000)
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
-    timeout             = 5
-    interval            = 30
-    matcher             = "200-299"  # Accept any 2xx status code
+    path                = "/api/health-check/"
   }
 
   # Important: Required for Fargate IP targets

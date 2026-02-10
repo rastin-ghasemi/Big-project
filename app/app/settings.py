@@ -33,7 +33,7 @@ ALLOWED_HOSTS.extend(
         os.environ.get('ALLOWED_HOSTS', '').split(','),
     )
 )
-if os.environ.get("AWS_EXECUTION_ENV"):
+if os.environ.get('AWS_EXECUTION_ENV'):
     ALLOWED_HOSTS.append(gethostbyname(gethostname()))
 # Application definition
 
