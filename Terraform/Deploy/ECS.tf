@@ -207,13 +207,19 @@ resource "aws_ecs_service" "api" {
 
   network_configuration {
     ### This Will remove after we config ALB
-    assign_public_ip = true
+    assign_public_ip = false
     subnets = [
-      aws_subnet.public_subnets-a.id
-      #aws_subnet.Private-a.id,
-      #aws_subnet.Private-b.id
+      
+      aws_subnet.Private-a.id,
+      aws_subnet.Private-b.id
     ]
+    
 
     security_groups = [aws_security_group.ecs_service.id]
+  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.api.arn
+    container_name = "proxy"
+    container_port = 8000
   }
 }

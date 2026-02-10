@@ -250,7 +250,7 @@ data "aws_iam_policy_document" "ecs" {
       "ecs:DeleteService",
       "ecs:DescribeTaskDefinition",
       "ecs:CreateService",
-       "ecs:TagResource",
+      "ecs:TagResource",
       "ecs:UntagResource",
       "ecs:ListTagsForResource",
       "ecs:RegisterTaskDefinition",
@@ -300,7 +300,7 @@ data "aws_iam_policy_document" "iam" {
       "iam:DeleteServiceLinkedRole",
       "iam:GetServiceLinkedRoleDeletionStatus"
     ]
-    
+
     resources = ["*"]
   }
 }
@@ -328,17 +328,17 @@ data "aws_iam_policy_document" "logs" {
       "logs:CreateLogGroup",
       "logs:DeleteLogGroup",
       "logs:DescribeLogGroups",
-      
+
       # Tag management
       "logs:TagResource",
       "logs:UntagResource",
       "logs:ListTagsForResource",
       "logs:ListTagsLogGroup",
-      
+
       # Log retention
       "logs:PutRetentionPolicy",
       "logs:DeleteRetentionPolicy",
-      
+
       # Log stream operations
       "logs:DescribeLogStreams",
       "logs:CreateLogStream",
@@ -360,4 +360,46 @@ resource "aws_iam_policy" "logs" {
 resource "aws_iam_user_policy_attachment" "logs" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.logs.arn
+}
+
+
+
+#########################
+# Policy for ELB access #
+#########################
+
+data "aws_iam_policy_document" "elb" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "elasticloadbalancing:DeleteLoadBalancer",
+      "elasticloadbalancing:DeleteTargetGroup",
+      "elasticloadbalancing:DeleteListener",
+      "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:DescribeLoadBalancerAttributes",
+      "elasticloadbalancing:DescribeTargetGroups",
+      "elasticloadbalancing:DescribeTargetGroupAttributes",
+      "elasticloadbalancing:DescribeLoadBalancers",
+      "elasticloadbalancing:CreateListener",
+      "elasticloadbalancing:SetSecurityGroups",
+      "elasticloadbalancing:ModifyLoadBalancerAttributes",
+      "elasticloadbalancing:CreateLoadBalancer",
+      "elasticloadbalancing:ModifyTargetGroupAttributes",
+      "elasticloadbalancing:CreateTargetGroup",
+      "elasticloadbalancing:AddTags",
+      "elasticloadbalancing:DescribeTags"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "elb" {
+  name        = "${aws_iam_user.cd.name}-elb"
+  description = "Allow user to manage ELB resources."
+  policy      = data.aws_iam_policy_document.elb.json
+}
+
+resource "aws_iam_user_policy_attachment" "elb" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.elb.arn
 }

@@ -1,5 +1,5 @@
 FROM nginxinc/nginx-unprivileged:1-alpine
-LABEL maintainer="londonappdeveloper.com"
+LABEL maintainer="Rastin"
 
 COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
 COPY ./gunicorn_headrs /etc/nginx/gunicorn_headrs
