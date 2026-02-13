@@ -230,7 +230,7 @@ resource "aws_ecs_service" "api" {
   task_definition        = aws_ecs_task_definition.api.family
   desired_count          = 1
   launch_type            = "FARGATE"
-  platform_version       = "1.4.0"
+  platform_version       = "1.6.0"
   enable_execute_command = true
 
   network_configuration {
