@@ -1,13 +1,32 @@
 # AWS ECS Infrastructure with Terraform & CI/CD
 
+![AWS](https://img.shields.io/badge/AWS-ECS-orange)
+![Terraform](https://img.shields.io/badge/Terraform-IaC-purple)
+![GitLab CI](https://img.shields.io/badge/GitLab-CI/CD-orange)
 
 <p align="center">
   <img src="Project.png" alt="Project Screenshot" width="800"/>
 </p>
 
 
-This project implements a highly available, scalable containerized application infrastructure on AWS using ECS (Elastic Container Service) with a focus on security, automation, and infrastructure as code, all orchestrated through a comprehensive GitLab CI/CD pipeline.
+This project demonstrates a production-grade AWS ECS architecture built with Terraform and GitLab CI/CD, focusing on security, scalability, and automation.
 
+It is designed as a real-world DevOps portfolio project, not a tutorial.
+
+## Prerequisites
+
+- AWS Account with appropriate permissions
+- GitLab repository with CI/CD enabled
+- Docker and Docker Compose
+- Terraform (for local development)
+- Domain name (for DNS configuration)
+## Getting Started
+
+1. Clone the repository
+2. Configure AWS credentials
+3. Run SetUp directory to create ECR repositories and IAM roles
+4. Configure GitLab CI/CD variables
+5. Push to main branch to trigger pipeline
 # CI/CD Pipeline (.gitlab-ci.yml)
 The project uses a multi-stage GitLab CI/CD pipeline with Docker-in-Docker (dind) for container builds and deployments:
 
@@ -54,21 +73,15 @@ Manual cleanup job:
 - Destroys all infrastructure resources
 - **Requires manual trigger** - Protection against accidental deletion
 - Useful for environment teardown and cost management
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Terraform Directory Structure:
-The project uses a modular Terraform setup with two main directories:
+The project uses a modular Terraform setup with two main directories.
+
+The infrastructure is split into two layers:
+
+- SetUp: Bootstrap resources (ECR, IAM, backend)
+- Deploy: Application infrastructure deployed via CI/CD
+
+This separation prevents accidental destruction of shared resources and improves CI/CD safety.
 
 ```txt
 Terraform/
@@ -125,28 +138,7 @@ Terraform/
 - **DNS**: Route53 record management
 
 
-# Key Components:
-- Container Orchestration: ECS clusters running API services and proxy containers across private subnets
 
-- Infrastructure as Code: Terraform with remote state management (S3) and state locking (DynamoDB)
-
-- Storage: EFS for shared persistent storage (NFS) across ECS tasks
-
-- Networking: Private subnet architecture with VPC endpoints for secure AWS service access
-
-- CI/CD Integration: GitLab/GitHub pipelines for automated deployments
-
-## Security:
-
-- ACM for TLS certificate management
-
-- SSH/SSM interface endpoints for secure instance access
-
-- Private network architecture
-
-- Monitoring: CloudWatch integration for logs and metrics
-
-- Container Registry: ECR for Docker image storage
 
 ## Architecture Highlights:
 - **Multi-environment support:** Automatic workspace selection (staging/prod) based on branch
