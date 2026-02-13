@@ -92,7 +92,7 @@ resource "aws_ecs_task_definition" "api" {
         },
         {
           name  = "ALLOWED_HOSTS"
-          value = "*"
+          value = aws_route53_record.app.fqn
         },
       ]
       mountPoints = [
@@ -179,7 +179,7 @@ resource "aws_ecs_task_definition" "api" {
 }
 
 resource "aws_security_group" "ecs_service" {
-  description = "Access rules for the ECS service."
+  description = "Access rules for the ECS service"
   name        = "${local.Prefix}-ecs-service"
   vpc_id      = aws_vpc.main.id
 
