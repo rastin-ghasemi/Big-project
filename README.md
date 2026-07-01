@@ -12,7 +12,7 @@
 This project demonstrates a production-grade AWS ECS architecture built with Terraform and GitLab CI/CD, focusing on security, scalability, and automation.
 
 It is designed as a real-world DevOps portfolio project, not a tutorial.
-
+.gitlab is url :https://gitlab.com/rastin-ghasemi/big-project/
 ## Prerequisites
 
 - AWS Account with appropriate permissions
